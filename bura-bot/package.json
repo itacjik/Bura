@@ -1,15 +1,17 @@
 {
-  "name": "server",
+  "name": "bura-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.19.2"
+    "dotenv": "^16.4.5",
+    "grammy": "^1.30.0",
+    "nodemon": "^3.1.4"
   }
 }
