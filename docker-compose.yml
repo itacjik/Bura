@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+ app:
+    container_name: app
+    build: ./app
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./app:/usr/src/app:delegated
+    environment:
+      - NODE_ENV=${MODE}
+      - VIRTUAL_HOST=app.${DOMAIN}
+    networks:
+      - default
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
+  nginx-proxy:
+    container_name: proxy
+    image: jwilder/nginx-proxy
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ~/dev/certs/:/etc/nginx/certs:delegated
+      - ./devops/nginx/conf.d:/etc/nginx/conf.d
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  db_data:
+  cache:
+    driver: local
+
+networks:
+  default:
