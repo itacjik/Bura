@@ -1,0 +1,13 @@
+.app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #2c3e50;
+}
+
+:global(.pixiCanvas) {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

@@ -1,22 +1,45 @@
-FROM node:22.4.0
+# Базовый образ для разработки и сборки
+FROM node:18-alpine as base
 
-# Создаем директорию приложения
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Копируем файлы зависимостей
 COPY package*.json ./
 
-# Устанавливаем зависимости
+# Стадия разработки
+FROM base as development
+
+# Устанавливаем зависимости для разработки
 RUN npm install
 
-# Копируем исходный код приложения
+# Копируем исходный код
 COPY . .
 
-# Собираем статические файлы
-RUN npm run build
+# Стадия сборки
+FROM base as builder
 
-# Открываем порт
-EXPOSE 3000
+# Устанавливаем зависимости для продакшн
+RUN npm ci
 
-# Запускаем приложение
-CMD ["npm", "start", "npx", "serve", "-s", "build", "-l", "3000"]
+# Копируем исходный код
+COPY . .
+
+# Генерируем карты и собираем приложение
+RUN npm run generate-cards && npm run build
+
+# Стадия продакшн
+FROM nginx:alpine as production
+
+# Копируем собранное приложение
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Копируем конфигурацию nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Добавляем скрипт для подстановки переменных окружения
+COPY env.sh /docker-entrypoint.d/40-env.sh
+RUN chmod +x /docker-entrypoint.d/40-env.sh
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

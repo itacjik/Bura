@@ -2,29 +2,36 @@ version: '3.8'
 
 services:
 
- app:
+  app:
     container_name: app
-    build: ./app
+    build:
+      context: ./bura-app
+      target: development
     depends_on:
       - nginx-proxy
     volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./app:/usr/src/app:delegated
+      - ./bura-app:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run generate-cards && npm start"
     environment:
-      - NODE_ENV=${MODE}
-      - VIRTUAL_HOST=app.${DOMAIN}
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_TG_BOT_TOKEN=${REACT_APP_TG_BOT_TOKEN}
+      - REACT_APP_GAME_MIN_PLAYERS=${REACT_APP_GAME_MIN_PLAYERS}
+      - REACT_APP_GAME_MAX_PLAYERS=${REACT_APP_GAME_MAX_PLAYERS}
+      - REACT_APP_GAME_WIN_POINTS=${REACT_APP_GAME_WIN_POINTS}
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - REACT_APP_WS_URL=${REACT_APP_WS_URL}
+      - REACT_APP_ENV=${REACT_APP_ENV}
+      - VIRTUAL_HOST=bura.loc
+      - VIRTUAL_PORT=3000
     networks:
-      - default
-    restart: on-failure
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+      - bura-network
         
   nginx-proxy:
-    container_name: proxy
-    image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx-proxy
     depends_on:
       - db
     ports:
@@ -32,6 +39,9 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ~/dev/certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
       - ~/dev/certs/:/etc/nginx/certs:delegated
       - ./devops/nginx/conf.d:/etc/nginx/conf.d
     restart: on-failure
@@ -40,6 +50,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - bura-network
 
 volumes:
   db_data:
@@ -47,4 +59,5 @@ volumes:
     driver: local
 
 networks:
-  default:
+  bura-network:
+    driver: bridge

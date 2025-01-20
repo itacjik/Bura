@@ -1,0 +1,93 @@
+.bura-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+    background: #2c3e50;
+    color: white;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.player1-hand,
+.player2-hand {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.game-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+}
+
+.card {
+    width: 100px;
+    height: 150px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: black;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.card.back {
+    background: linear-gradient(45deg, #1a237e, #3949ab);
+    color: transparent;
+}
+
+.card.selected {
+    transform: translateY(-20px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.game-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.game-controls button:hover {
+    background: #2980b9;
+}
+
+.game-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    font-size: 24px;
+}
+
+.trump-card {
+    position: relative;
+    transform: rotate(-90deg);
+}

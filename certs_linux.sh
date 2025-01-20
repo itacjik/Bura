@@ -7,7 +7,4 @@ sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 /usr/local/bin/mkcert -install
 
 mkdir -p ~/dev/certs/
-mkcert -cert-file ~/dev/certs/app.lottony.dev.crt -key-file ~/dev/certs/app.lottony.dev.key app.lottony.dev
-mkcert -cert-file ~/dev/certs/lottony.dev.crt -key-file ~/dev/certs/lottony.dev.key lottony.dev
-mkcert -cert-file ~/dev/certs/admin.lottony.dev.crt -key-file ~/dev/certs/admin.lottony.dev.key admin.lottony.dev
-mkcert -cert-file ~/dev/certs/grafana.lottony.dev.crt -key-file ~/dev/certs/grafana.lottony.dev.key grafana.lottony.dev
+mkcert -cert-file ~/dev/certs/bura.loc.dev.crt -key-file ~/dev/certs/bura.loc.dev.key bura.loc.dev
